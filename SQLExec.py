@@ -9,24 +9,30 @@ class Connection:
         self.options  = options
 
     def _buildCommand(self, options):
+        for i, option in enumerate(options):
+            options[i] = option.format(options=self.options)
         return self.settings['command'] + ' ' + ' '.join(options) + ' ' + self.settings['args'].format(options=self.options)
 
     def _getCommand(self, options, queries):
-        command  = self._buildCommand(options)
+        command = self._buildCommand(options)
+        #If MSSQL print query to -C flag for sqsh
+        if self.options.type == "mssql":
+            cmd = command + "'" + ''.join(queries) + "'"
+        else:
+            self.tmp = tempfile.NamedTemporaryFile(mode = 'w', delete = False)
+            for query in queries:
+                self.tmp.write(query)
+            self.tmp.close()
 
-        self.tmp = tempfile.NamedTemporaryFile(mode = 'w', delete = False)
-        for query in queries:
-            self.tmp.write(query)
-        self.tmp.close()
-
-        cmd = '%s < "%s"' % (command, self.tmp.name)
-
+            cmd = '%s < "%s"' % (command, self.tmp.name)
+        # print(cmd)
         return Command(cmd)
 
     def execute(self, queries):
         command = self._getCommand(self.settings['options'], queries)
         command.show()
-        os.unlink(self.tmp.name)
+        if hasattr(self, 'tmp'):
+            os.unlink(self.tmp.name)
 
     def desc(self):
         query = self.settings['queries']['desc']['query']
@@ -39,7 +45,8 @@ class Connection:
             except IndexError:
                 pass
 
-        os.unlink(self.tmp.name)
+        if hasattr(self, 'tmp'):
+            os.unlink(self.tmp.name)
 
         return tables
 
@@ -47,15 +54,16 @@ class Connection:
         query = self.settings['queries']['desc table']['query'] % tableName
         command = self._getCommand(self.settings['queries']['desc table']['options'], query)
         command.show()
-
-        os.unlink(self.tmp.name)
+        if hasattr(self, 'tmp'):
+            os.unlink(self.tmp.name)
 
     def showTableRecords(self, tableName):
         query = self.settings['queries']['show records']['query'] % tableName
         command = self._getCommand(self.settings['queries']['desc table']['options'], query)
         command.show()
+        if hasattr(self, 'tmp'):
+            os.unlink(self.tmp.name)
 
-        os.unlink(self.tmp.name)
 
 class Command:
     def __init__(self, text):
@@ -104,11 +112,14 @@ class Options:
         self.name     = name
         connections   = sublime.load_settings("SQLExec.sublime-settings").get('connections')
         self.type     = connections[self.name]['type']
-        self.host     = connections[self.name]['host']
-        self.port     = connections[self.name]['port']
-        self.username = connections[self.name]['username']
-        self.password = connections[self.name]['password']
         self.database = connections[self.name]['database']
+        if self.type == "mysql2":
+            self.loginpath = connections[self.name]['loginpath']
+        else:
+            self.host     = connections[self.name]['host']
+            self.port     = connections[self.name]['port']
+            self.username = connections[self.name]['username']
+            self.password = connections[self.name]['password']
 
     def __str__(self):
         return self.name
