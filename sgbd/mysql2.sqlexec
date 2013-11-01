@@ -1,0 +1,23 @@
+{
+    "sql_exec": {
+        "options": ["--login-path={options.loginpath}", "-f", "--table"],
+        "args": "-D{options.database}",
+        "queries": {
+            "desc" : {
+                "query": "show tables",
+                "options": ["--login-path={options.loginpath}", "-f", "--table", "--skip-column-names"],
+                "format" : "|%s|"
+            },
+            "desc table": {
+                "query": "desc %s",
+                "options": ["--login-path={options.loginpath}", "-f", "--table"],
+                "format" : "|%s|"
+            },
+            "show records": {
+                "query": "select * from %s limit 100",
+                "options": ["--login-path={options.loginpath}", "-f", "--table"],
+                "format" : "|%s|"
+            }
+        }
+    }
+}

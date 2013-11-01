@@ -1,0 +1,23 @@
+{
+    "sql_exec": {
+        "options": [],
+        "args": "-S {options.host}  -U '{options.username}' -P {options.password} -D {options.database} -m pretty -C",
+        "queries": {
+            "desc" : {
+                "query": "select * from sys.tables",
+                "options": [],
+                "format" : "|%s|"
+            },
+            "desc table": {
+                "query": "sp_help '%s'",
+                "options": [],
+                "format" : "|%s|"
+            },
+            "show records": {
+                "query": "select top 100 * from %s",
+                "options": [],
+                "format" : "|%s|"
+            }
+        }
+    }
+}
