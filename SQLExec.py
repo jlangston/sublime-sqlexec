@@ -6,12 +6,13 @@ history = ['']
 class Connection:
     def __init__(self, options):
         self.settings = sublime.load_settings(options.type + ".sqlexec").get('sql_exec')
+        self.command  = sublime.load_settings("SQLExec.sublime-settings").get('sql_exec.commands')[options.type]
         self.options  = options
 
     def _buildCommand(self, options):
         for i, option in enumerate(options):
             options[i] = option.format(options=self.options)
-        return self.settings['command'] + ' ' + ' '.join(options) + ' ' + self.settings['args'].format(options=self.options)
+        return self.command + ' ' + ' '.join(options) + ' ' + self.settings['args'].format(options=self.options)
 
     def _getCommand(self, options, queries):
         command = self._buildCommand(options)
@@ -165,7 +166,7 @@ def executeHistoryQuery(index):
 
 def executeQuery(query):
     global connection
-    global historyh
+    global history
     history.append(query)
     if connection != None:
         connection.execute(query)
