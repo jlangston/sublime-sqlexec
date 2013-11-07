@@ -5,10 +5,23 @@ A Plugin for running SQL commands in Sublime Text.
 
 Compatibility: MySQL, PostgreSQL. ,MSSQL (on Linux and OSX using SQSH)
 
+Oracle is coming soon.
+
 # Installation
 Download the Zip file, extract it to your Sublime Text packages directory, and rename it to SQLExec
 
 Some directories have to be defined in the PATH environment variable, according to the SGBD that you want to use: "mysql" executable for MySQL, "pgsql" executable for PostgreSQL, or "sqlplus" executable for Oracle ( Not tested ), "sqsh" executable for MSSQL (OSX and Linux)
+
+You can also specify full path for these command in settings :
+
+( Preferences > Package Settings > SQLExec > Settings - User )
+
+```json
+    "sql_exec.commands": {
+        "mysql" : "/usr/bin/mysql"
+    },
+
+```
 
 # Sample configuration file
 ```json
