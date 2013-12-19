@@ -4,5 +4,5 @@
     { "keys": ["super+e", "super+h"], "command": "sql_history" },
     { "keys": ["super+e", "super+q"], "command": "sql_query" },
     { "keys": ["super+e", "super+s"], "command": "sql_show_records" },
-    { "keys": ["super+e", "super+d"], "command": "sql_desc" },
+    { "keys": ["super+e", "super+d"], "command": "sql_desc" }
 ]
