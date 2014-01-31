@@ -18,7 +18,7 @@ class Connection:
         command = self._buildCommand(options)
         #If MSSQL print query to -C flag for sqsh
         if self.options.type == "mssql":
-            cmd = command + "'" + ''.join(queries) + "'"
+            cmd = command + "\"" + ''.join(queries) + "\""
         else:
             self.tmp = tempfile.NamedTemporaryFile(mode = 'w', delete = False)
             for query in queries:
@@ -26,7 +26,7 @@ class Connection:
             self.tmp.close()
 
             cmd = '%s < "%s"' % (command, self.tmp.name)
-        # print(cmd)
+        print(cmd)
         return Command(cmd)
 
     def execute(self, queries):
