@@ -1,15 +1,14 @@
 sublime-sqlexec
-===============
 
 A Plugin for running SQL commands in Sublime Text.
 
 Compatibility: MySQL, PostgreSQL. ,MSSQL (on Linux and OSX using SQSH)
 
-Oracle is coming soon.
+## Authors
 
-# Installation
+* Julien Martin
 
-### With Package Control ###
+## Installation and Configuration
 
 Look for the package named `PhpNamespace`.
 
@@ -73,3 +72,6 @@ Default shortcuts are :
 - `super+e` `super+q` : type a query
 - `super+e` `super+s` : show tables records
 - `super+e` `super+d` : desc table
+=======
+[Full documentation on official site](http://lubriciousdevelopers.github.io/projects/sublime-sql-exec/)
+>>>>>>> 49ce783009770d497e90b28afd29ccb9889ecdb4

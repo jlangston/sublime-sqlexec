@@ -14,19 +14,20 @@ class Connection:
             options[i] = option.format(options=self.options)
         return self.command + ' ' + ' '.join(options) + ' ' + self.settings['args'].format(options=self.options)
 
-    def _getCommand(self, options, queries):
-        command = self._buildCommand(options)
+    def _getCommand(self, options, queries, header = ''):
+        command  = self._buildCommand(options)
         #If MSSQL print query to -C flag for sqsh
         if self.options.type == "mssql":
             cmd = command + "\"" + ''.join(queries) + "\""
         else:
-            self.tmp = tempfile.NamedTemporaryFile(mode = 'w', delete = False)
+            self.tmp = tempfile.NamedTemporaryFile(mode = 'w', delete = False, suffix='.sql')
+            for query in self.settings['before']:
+                self.tmp.write(query + "\n")
             for query in queries:
                 self.tmp.write(query)
             self.tmp.close()
-
             cmd = '%s < "%s"' % (command, self.tmp.name)
-        # print(cmd)
+        print(cmd)
         return Command(cmd)
 
     def execute(self, queries):
@@ -60,7 +61,7 @@ class Connection:
 
     def showTableRecords(self, tableName):
         query = self.settings['queries']['show records']['query'] % tableName
-        command = self._getCommand(self.settings['queries']['desc table']['options'], query)
+        command = self._getCommand(self.settings['queries']['show records']['options'], query)
         command.show()
         if hasattr(self, 'tmp'):
             os.unlink(self.tmp.name)
@@ -85,13 +86,17 @@ class Command:
         self._display('SQLExec.errors', text)
 
     def run(self):
+        sublime.status_message(' SQLExec: running SQL command')
         results, errors = subprocess.Popen(self.text, stdout=subprocess.PIPE,stderr=subprocess.PIPE, shell=True).communicate()
-        if errors:
+
+        if not results and errors:
             self._errors(errors.decode('utf-8', 'replace').replace('\r', ''))
+
         return results.decode('utf-8', 'replace').replace('\r', '')
 
     def show(self):
         results = self.run()
+
         if results:
             self._result(results)
 
@@ -121,6 +126,8 @@ class Options:
             self.port     = connections[self.name]['port']
             self.username = connections[self.name]['username']
             self.password = connections[self.name]['password']
+        if 'service' in connections[self.name]:
+            self.service  = connections[self.name]['service']
 
     def __str__(self):
         return self.name

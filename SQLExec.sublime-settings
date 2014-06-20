@@ -5,7 +5,8 @@
         "mysql2" : "mysql", 
         "pgsql" : "psql",
         "oracle": "sqlplus",
-        "mssql" : "sqsh"
+        "mssql" : "sqsh",
+        "vertica": "vsql"
     },
     "connections": {
     }

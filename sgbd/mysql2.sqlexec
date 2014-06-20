@@ -1,6 +1,7 @@
 {
     "sql_exec": {
         "options": ["--login-path={options.loginpath}", "-f", "--table"],
+        "before": [],
         "args": "-D{options.database}",
         "queries": {
             "desc" : {
@@ -9,15 +10,14 @@
                 "format" : "|%s|"
             },
             "desc table": {
-                "query": "desc %s",
+                "query": "desc `%s`",
                 "options": ["--login-path={options.loginpath}", "-f", "--table"],
                 "format" : "|%s|"
             },
             "show records": {
-                "query": "select * from %s limit 100",
+                "query": "select * from `%s` limit 100",
                 "options": ["--login-path={options.loginpath}", "-f", "--table"],
                 "format" : "|%s|"
             }
         }
-    }
-}
+    } }
