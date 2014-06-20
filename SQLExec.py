@@ -27,7 +27,7 @@ class Connection:
                 self.tmp.write(query)
             self.tmp.close()
             cmd = '%s < "%s"' % (command, self.tmp.name)
-        print(cmd)
+        # print(cmd)
         return Command(cmd)
 
     def execute(self, queries):
