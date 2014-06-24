@@ -212,7 +212,6 @@ class sqlQuery(sublime_plugin.WindowCommand):
 
 class sqlExecute(sublime_plugin.WindowCommand):
     def run(self):
-        global connection
         if connection != None:
             selection = Selection(self.window.active_view())
             connection.execute(selection.getQueries())
@@ -222,3 +221,31 @@ class sqlExecute(sublime_plugin.WindowCommand):
 class sqlListConnection(sublime_plugin.WindowCommand):
     def run(self):
         sublime.active_window().show_quick_panel(Options.list(), sqlChangeConnection)
+
+class sqlCompleteTableName(sublime_plugin.EventListener):
+    def on_modified(self, view):
+        view_sel = view.sel()
+        sel = view_sel[0]
+        pos = sel.end()
+        text = view.substr(sublime.Region(pos - 1, pos))
+        if text == '.' :
+            completions = self.autocomplete(False, view.substr(view.word(pos -1)))
+        elif text == ' ':
+            completions = self.autocomplete()
+            
+    def autocomplete(self, show_tables=True, table_name=None):
+        global connection
+        if connection != None:
+            if show_tables:
+                data = connection.desc()
+            else:
+                data = connection.desc()
+            # print(data)
+            completions = [(x[.0],) * 2 for x in data]
+            return completions
+        else:
+            sublime.error_message('No active connection')
+
+    def on_query_completions(self, view, prefix, locations):
+        if view.match_selector(locations[0], "source.sql"):
+            return (completions)
