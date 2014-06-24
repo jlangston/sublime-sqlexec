@@ -1,6 +1,7 @@
 import sublime, sublime_plugin, tempfile, os, subprocess
 
 connection = None
+completions = []
 history = ['']
 
 class Connection:
@@ -236,16 +237,16 @@ class sqlCompleteTableName(sublime_plugin.EventListener):
             
     def autocomplete(self, show_tables=True, table_name=None):
         global connection
+        global completions
         if connection != None:
             if show_tables:
                 data = connection.desc()
             else:
                 data = connection.desc()
-            # print(data)
-            completions = [(x[.0],) * 2 for x in data]
+            completions = [(x[0],) * 2 for x in data]
             return completions
-        else:
-            sublime.error_message('No active connection')
+        # else:
+        #     sublime.error_message('No active connection')
 
     def on_query_completions(self, view, prefix, locations):
         if view.match_selector(locations[0], "source.sql"):
