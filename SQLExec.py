@@ -212,6 +212,7 @@ class sqlQuery(sublime_plugin.WindowCommand):
 
 class sqlExecute(sublime_plugin.WindowCommand):
     def run(self):
+        global connection
         if connection != None:
             selection = Selection(self.window.active_view())
             connection.execute(selection.getQueries())
