@@ -13,6 +13,11 @@
                 "options": [],
                 "format" : "|%s|"
             },
+            "desc columns": {
+                "query": "\\d %s",
+                "options": [],
+                "format" : "|%s|"
+            },
             "show records": {
                 "query": "select * from %s limit 100",
                 "options": [],

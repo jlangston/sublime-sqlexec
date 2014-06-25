@@ -18,6 +18,11 @@
                 "options": ["-S"],
                 "format" : "|%s|"
             },
+            "desc columns": {
+                "query": "desc `%s`",
+                "options": ["-f", "--table"],
+                "format" : "|%s|"
+            },
             "show records": {
                 "query": "select * from %s;",
                 "options": ["-S"],

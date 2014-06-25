@@ -53,6 +53,23 @@ class Connection:
 
         return tables
 
+    def descColumns(self, tableName):
+        query = self.settings['queries']['desc columns']['query'] % tableName
+        command = self._getCommand(self.settings['queries']['desc columns']['options'], query)
+
+        columns = []
+        for result in command.run().splitlines():
+            try:
+                columns.append(result.split('|')[1].strip())
+            except IndexError:
+                pass
+
+        if hasattr(self, 'tmp'):
+            os.unlink(self.tmp.name)
+
+        return columns
+
+
     def descTable(self, tableName):
         query = self.settings['queries']['desc table']['query'] % tableName
         command = self._getCommand(self.settings['queries']['desc table']['options'], query)
@@ -224,7 +241,20 @@ class sqlListConnection(sublime_plugin.WindowCommand):
     def run(self):
         sublime.active_window().show_quick_panel(Options.list(), sqlChangeConnection)
 
-class sqlCompleteTableName(sublime_plugin.EventListener):
+# class sqlCompleteTableName(sublime_plugin.WindowCommand):
+#     def run(self):
+#         view = sublime.active_view()
+#         view_sel = view.sel()
+#         sel = view_sel[0]
+#         pos = sel.end()
+#         text = view.substr(sublime.Region(pos - 1, pos))
+#         print(text)
+#         if text == '.' :
+#             completions = self.autocomplete(False, view.substr(view.word(pos -1)))
+#         elif text == ' ':
+#             completions = self.autocomplete()
+            
+class sqlTableCompleteName(sublime_plugin.EventListener):
     def on_modified(self, view):
         view_sel = view.sel()
         sel = view_sel[0]
@@ -242,8 +272,8 @@ class sqlCompleteTableName(sublime_plugin.EventListener):
             if show_tables:
                 data = connection.desc()
             else:
-                data = connection.desc()
-            completions = [(x[0],) * 2 for x in data]
+                data = connection.descColumns(table_name)
+            completions = [(x,) * 2 for x in data]
             return completions
         # else:
         #     sublime.error_message('No active connection')

@@ -13,6 +13,11 @@
                 "options": [],
                 "format" : "|%s|"
             },
+            "desc columns": {
+                "query": "select [name] from syscolumns where id = object_id('%s')",
+                "options": [],
+                "format" : "|%s|"
+            },
             "show records": {
                 "query": "select top 100 * from %s",
                 "options": [],
