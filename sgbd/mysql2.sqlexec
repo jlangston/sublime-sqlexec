@@ -16,7 +16,7 @@
             },
             "desc columns": {
                 "query": "desc `%s`",
-                "options": ["-f", "--table"],
+                "options": ["--login-path={options.loginpath}", "-f", "--table"],
                 "format" : "|%s|"
             },
             "show records": {
