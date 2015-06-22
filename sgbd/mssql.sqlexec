@@ -1,7 +1,7 @@
 {
     "sql_exec": {
         "options": [],
-        "args": "-S {options.host}  -U '{options.username}' -P {options.password} -D {options.database} -m pretty -C",
+        "args": "-S {options.host}  -U '{options.username}' -P {options.password} -D {options.database} -m pretty -C ",
         "queries": {
             "desc" : {
                 "query": "select * from sys.tables",

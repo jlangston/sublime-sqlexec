@@ -94,7 +94,7 @@ class Command:
         panel.set_read_only(False)
         panel.set_syntax_file('Packages/SQL/SQL.tmLanguage')
         panel.run_command('append', {'characters': text})
-        panel.set_read_only(True)
+        panel.settings().set("word_wrap", "false")
         sublime.active_window().run_command("show_panel", {"panel": "output." + panelName})
 
     def _result(self, text):
